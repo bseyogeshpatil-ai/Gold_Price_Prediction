@@ -4,4 +4,6 @@ yfinance
 statsmodels
 scikit-learn
 pickle
+joblib
 matplotlib
+
