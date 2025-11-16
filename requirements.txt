@@ -3,6 +3,5 @@ pandas
 yfinance
 statsmodels
 scikit-learn
-joblib
 pickle
 matplotlib
