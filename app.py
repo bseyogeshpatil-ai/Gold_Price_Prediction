@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-import joblib
+# import joblib  # REMOVED
+import pickle    # ADDED
 from datetime import date, timedelta
 from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.pyplot as plt
@@ -8,7 +9,8 @@ import yfinance as yf
 import os
 
 # --- Configuration ---
-MODEL_FILE = 'arima_gold_model.pkl'
+# Renamed file extension for clarity
+MODEL_FILE = 'arima_gold_model.pkl' 
 TICKER_SYMBOL = "GLD"  # Gold ETF
 FORECAST_PERIOD = 14
 # ARIMA parameters (p, d, q) - Simplified for demonstration
@@ -35,14 +37,15 @@ def fetch_historical_data():
 
 @st.cache_resource
 def load_and_train_model(historical_data):
-    """Loads a saved model or trains a new one if necessary."""
+    """Loads a saved model or trains a new one if necessary, using pickle."""
     if historical_data.empty:
         return None
 
     # 1. Attempt to Load Model
     if os.path.exists(MODEL_FILE):
         try:
-            model_fit = joblib.load(MODEL_FILE)
+            with open(MODEL_FILE, 'rb') as f:
+                model_fit = pickle.load(f)
             st.success("Trained ARIMA model loaded successfully!")
             return model_fit
         except Exception as e:
@@ -55,8 +58,10 @@ def load_and_train_model(historical_data):
         model = ARIMA(series, order=ARIMA_ORDER)
         model_fit = model.fit()
 
-        # Save the model
-        joblib.dump(model_fit, MODEL_FILE)
+        # Save the model using pickle
+        with open(MODEL_FILE, 'wb') as f:
+            pickle.dump(model_fit, f)
+            
         st.success("New model trained and saved successfully!")
         return model_fit
     except Exception as e:
