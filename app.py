@@ -119,7 +119,7 @@ latest_price = fetch_live_price()
 col1, col2 = st.columns(2)
 
 if latest_price and not historical_data.empty:
-    # ✅ FIX 1: Extract the actual float value using .iloc[-1].item()
+    # Extract the actual float value using .iloc[-1].item()
     last_close_price = historical_data['Price'].iloc[-1].item()
     
     col1.metric(
@@ -168,7 +168,7 @@ if model is not None and not historical_data.empty:
             plot_hist = historical_data['Price'].tail(180) # Last 180 historical days
             plot_forecast = forecast_df.set_index('Date')['Predicted_Price']
             
-            # ✅ FIX 2: Use .iloc[-1] to access the last element by position
+            # Use .iloc[-1] to access the last element by position
             last_hist_date = plot_hist.index[-1]
             last_hist_price = plot_hist.iloc[-1] 
             
